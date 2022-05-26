@@ -1,0 +1,397 @@
+@CHARSET "UTF-8";
+
+a:link {
+	color: #fff;
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+	color: #fff;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #fff;
+}
+
+a:active {
+	text-decoration: none;
+	color: #fff;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-size: 12px;
+	font-family: "微软雅黑";
+	background: url(../img/bg.jpg) no-repeat;
+	width: 100%;
+	height: 100vh;
+	background-size: cover;
+}
+
+#top {
+	width: 100%;
+	height: 60px;
+	background: rgba(15, 25, 50, 0.3);
+	color: #fff;
+	line-height: 60px;
+	text-align: center;
+	font-size: 30px;
+}
+
+#box {
+	width: 800px;
+	height: 600px;
+	background: rgba(255, 255, 255, .5);
+	margin: 20px auto 0;
+}
+
+.b-head {
+	width: 100%;
+	height: 60px;
+	background-color: #4CAF50;
+}
+
+.h-img {
+	margin: 0 20px;
+	float: left;
+	user-select: none;
+}
+
+.h_span {
+	color: #fff;
+	font-size: 18px;
+	line-height: 60px;
+	float: left;
+	user-select: none;
+	cursor: default;
+}
+
+.b-body {
+	width: 100%;
+	height: 420px;
+	overflow: auto;
+	margin: 20px 0;
+}
+
+.rotWord,
+.mWord {
+	width: 100%;
+	margin-top: 10px;
+	overflow: hidden;
+}
+
+.rotWord span {
+	background: url(../img/rot.png);
+	height: 40px;
+	width: 40px;
+	margin-left: 20px;
+	float: left;
+}
+
+.rotWord p {
+	word-break: break-all;
+	top: 4px;
+	float: left;
+	color: #fff;
+	font-size: 14px;
+	margin-left: 10px;
+	padding: 10px;
+	line-height: 24px;
+	background: rgba(0, 0, 255, .5);
+	border-radius: 6px;
+	max-width: 220px;
+}
+
+.mWord span {
+	background: url(../img/my.png);
+	height: 40px;
+	width: 40px;
+	float: right;
+	margin-right: 20px;
+}
+
+.mWord p {
+	word-break: break-all;
+	top: 2px;
+	float: right;
+	color: #fff;
+	font-size: 14px;
+	margin-right: 10px;
+	padding: 10px;
+	line-height: 24px;
+	background: #19b955;
+	border-radius: 6px;
+	max-width: 220px;
+}
+
+.b-footer {
+	width: 760px;
+	height: 60px;
+	margin: 0 20px;
+	font-size: 16px;
+	color: #666;
+}
+
+#f-left {
+	padding-left: 20px;
+	outline: none;
+	overflow: hidden;
+	width: 620px;
+	height: 60px;
+	float: left;
+	background: rgba(0, 0, 0, .1);
+	font-size: 18px;
+	border: none;
+	border-radius: 5px;
+}
+
+#btn {
+	width: 100px;
+	height: 60px;
+	background: #666666;
+	float: right;
+	cursor: pointer;
+	text-align: center;
+	line-height: 60px;
+	font-size: 18px;
+	color: #fff;
+	user-select: none;
+	border-radius: 10px;
+}
+
+html,
+body {
+	margin: 0px;
+}
+
+header {
+	height: 70px;
+	background-color: #0d1c25;
+	/* box-shadow: 0 0 24px rgba(12,2,3,0.3); */
+	filter: alpha(opacity=85);
+	-moz-opacity: 0.85;
+	-khtml-opacity: 0.85;
+	opacity: 0.85;
+}
+
+header .logo {
+	background-image: url("../images/logo.png");
+	background-size: cover;
+	float: left;
+	height: 60px;
+	width: 200px;
+}
+
+header .menus {
+	display: flex;
+	height: 70px;
+	align-items: center;
+	float: left;
+}
+
+header .menus a {
+	display: block;
+	float: left;
+	color: #9ebfd8;
+	font-size: 14px;
+	padding: 8px 20px;
+	text-decoration: none;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	transition: all 0.5s;
+	margin: 0px 17px;
+}
+
+header .menus a:hover {
+	color: #FFF;
+}
+
+header .menus .active {
+	color: #FFF;
+	border-color: #FFF;
+}
+
+header .float-right {
+	float: right;
+}
+
+header .float-right a {
+	margin: 0px 10px;
+}
+
+.container {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.third_container {
+	height: 171px;
+	background: #1e323e url("../images/third_bg.png") no-repeat center -58px;
+}
+
+.third_container .mod_bigbtn {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	width: 214px;
+	height: 53px;
+	line-height: 53px;
+	border-radius: 4px;
+	text-align: center;
+	box-shadow: 0 0 5px rgba(12, 2, 3, 0.17);
+	font-size: 16px;
+	color: #115274;
+	transition: all 0.5s ease-out;
+	text-decoration: none;
+}
+
+.third_container .third_btn .mod_bigbtn {
+	margin: 0 42px;
+}
+
+.third_container .mod_btn_white {
+	color: #2c2c2c;
+	background-color: rgba(255, 255, 255, 0.57);
+}
+
+.third_container .mod_btn_white:hover {
+	background-color: rgba(255, 255, 255, 0.75);
+}
+
+.third_container .mod_btn_green {
+	background-color: rgba(124, 224, 101, 0.8);
+}
+
+.third_container .mod_btn_green:hover {
+	background-color: #8bf273;
+}
+
+.third_container .third_btn {
+	padding-top: 63px;
+	text-align: center;
+}
+
+.footer {
+	z-index: 10;
+	position: relative;
+	height: 80px;
+	/* 113px; */
+	font-size: 12px;
+	background-color: #23282d;
+}
+
+.footer .copyright {
+	position: relative;
+	padding-top: 25px;
+	text-align: center;
+}
+
+.footer .txt,
+.footer .txt>a {
+	font-size: 24px;
+	line-height: 36px;
+	color: #757678;
+	text-align: center;
+	text-decoration: none;
+}
+
+/*璋冭妭椤甸潰楂樺害*/
+.main {
+	min-height: 736px;
+	padding-top: 50px;
+}
+
+.main .input {
+	display: block;
+	height: 34px;
+	padding: 6px 20px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+	-o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+	border-radius: 24px;
+	font-size: 16px;
+	text-align: center;
+}
+
+.main .input:focus {
+	border-color: #66afe9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.bg2 {
+	background-color: #0b2838;
+}
+
+.bg1 {
+	background-color: #0b2838;
+}
+
+.bg3 {
+	background-color: #0b2838;
+	/*  68c39f */
+}
+
+/*
+	鑷€傚簲閮ㄥ垎
+	 */
+@media screen and (max-width: 768px) {
+	#app {
+		padding: 10px !important;
+	}
+
+	header {
+		height: 50px;
+	}
+
+	header .logo {
+		display: none;
+	}
+
+	header .menus {
+		height: 50px;
+	}
+
+	header .menus a {
+		font-size: 13px;
+		/* 12px */
+		padding: 0px 3px;
+		margin: 0px;
+	}
+
+	header .float-right {
+		float: left;
+	}
+
+	.main .input {
+		width: 90%;
+	}
+
+	.third_container .third_btn .mod_bigbtn {
+		margin: 0;
+	}
+
+	.footer .copyright {
+		padding-left: 10px;
+	}
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-Hans-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>旦旦给您对对联 ^_^</title>
+    <link rel="stylesheet" href="css/duilian.css?v=1">
+    <link rel="shortcut icon" href="img/icon.png">
+
+
+    <script src="https://ai.binwang.me/lib/vue.js"></script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7539390442334663"
+        crossorigin="anonymous"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108884732-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-108884732-1');
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="menus">
+                <a href="./index.html">旦旦机器人</a>
+                <a class="active" href="./duilian.html">对联机器人</a>
+            </div>
+        </div>
+    </header>
+    <div id="app">
+        <div class="page">
+            <div class="header">
+                <h1 class="title">欢迎使用旦旦自动对对联</h1>
+
+                <div class="couplet-button_group">
+                    <input type="text" title="输入上联" class="couplet-input" placeholder="请输入上联" v-model="in_str"
+                        v-on:keyup.enter="get_output">
+                    <button type="button" class="couplet-btn" v-on:click="get_output" v-show="!loaded">对下联</button>
+                    <button type="button" class="couplet-btn change-btn" v-on:click="next_output"
+                        v-show="loaded">换一换</button>
+                </div>
+            </div>
+            <div class="content">
+                <div id="loading" v-if="loading"></div>
+                <div class="couplet-text couplet-text_up">
+                    <div class="couplet-hd">上联：</div>
+                    <div class="couplet-bd" v-html="in_html"></div>
+                </div>
+                <div class="couplet-text couplet-text_down">
+                    <div class="couplet-hd">下联：</div>
+                    <div class="couplet-bd" v-html="out_html" v-show="output"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button id="back_to_top" v-show="show_back" v-on:click="back_to_top">返回顶部</button>
+
+    </div>
+</body>
+<div class="footer">
+    <div class="container copyright">
+        <p class="txt">制作人：王伟威、徐志超</p>
+    </div>
+</div>
+<script src="https://ai.binwang.me/lib/uuidv4.js"></script>
+<!--<script src="https://ai.binwang.me/lib/confetti.browser.min.js"></script>-->
+<script>
+
+    var shareBackendHost = "https://ai-backend.binwang.me";
+
+    function openFire(end) {
+        document.getElementById('share_text').classList.remove('pop_up');
+        setTimeout(function () {
+            document.getElementById('share_text').classList.add('pop_up');
+        }, 200);
+
+        /*
+            // launch a few confetti from the left edge
+            confetti({
+              particleCount: 7,
+              angle: 60,
+              spread: 55,
+              origin: { x: 0, y: 1 }
+            });
+            // and launch a few from the right edge
+            confetti({
+              particleCount: 7,
+              angle: 120,
+              spread: 55,
+              origin: { x: 1, y: 1 }
+            });
+  
+            // keep going until we are out of time
+            if (Date.now() < end) {
+              requestAnimationFrame(openFire);
+            }
+        */
+    }
+
+    var VueAds = Vue.component('my-component', {
+        template: '<ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-gi-19+58-26-7b" data-ad-client="ca-pub-7539390442334663" data-ad-slot="3017558233"></ins>',
+        mounted: function () {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+    });
+
+    var userId = localStorage.getItem('user_id');
+    if (userId == null) {
+        userId = uuidv4();
+        localStorage.setItem('user_id', userId);
+    }
+
+    var likedIds = localStorage.getItem('liked_ids');
+
+    if (likedIds == null) {
+        likedIds = new Set();
+        saveLikedIds()
+    } else {
+        likedIds = new Set(JSON.parse(likedIds));
+    }
+
+    function saveLikedIds() {
+        localStorage.setItem('liked_ids', JSON.stringify(Array.from(likedIds)))
+    }
+
+
+    function get(url, cb) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                if (xmlhttp.status == 200) {
+                    data = JSON.parse(xmlhttp.responseText);
+                    cb(data)
+                }
+            }
+        };
+        xmlhttp.open("GET", url);
+        xmlhttp.send();
+    }
+
+
+    function post(url, req, cb) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                if (xmlhttp.status == 200) {
+                    data = JSON.parse(xmlhttp.responseText);
+                    cb(data)
+                }
+            }
+        };
+        xmlhttp.open("POST", url);
+        xmlhttp.setRequestHeader("Content-Type", "application/json")
+        xmlhttp.send(JSON.stringify(req));
+    }
+
+    var app = new Vue({
+        components: {
+            'vue-ads': VueAds
+        },
+        el: '#app',
+        data: {
+            in_str: '',
+            in_html: '',
+            output: '',
+            out_html: '',
+            couplets: [],
+            loading: false,
+            loaded: false,
+            uploading: false,
+            uploaded: false,
+            outputs: [],
+            scores: [],
+            resultCurse: 0,
+            score: 0,
+            good_score: false,
+            hint: "",
+            get_couplet_type: 'hot',
+            show_back: false,
+        },
+        watch: {
+            in_str: function (val, oldVal) {
+                this.up_couplet(val);
+                this.output = "";
+                this.score = 0;
+                this.loaded = false;
+                self.uploaded = false;
+            }
+        },
+
+        mounted: function () {
+            window.addEventListener('scroll', this.handle_scroll);
+            this.get_couplets('hot');
+            this.get_hint();
+            this.resume();
+        },
+
+        methods: {
+            get_hint: function () {
+                var hints = [
+                    "对联小贴士：本系统暂时不支持繁体字和特殊符号，断句请用全角逗号分隔。",
+                    "对联小贴士：如果上联平仄符合规范，将会得到更好的下联",
+                    "对联小贴士：一般上联的最后一个字为仄声",
+                    "对联小贴士：分享背景图中的二维码即可分享网址",
+                    "对联小贴士：<a href='https://www.binwang.me' target='_blank'>点击这里</a> 来访问作者的网站",
+                    "对联小贴士：如果您喜欢本网站，请到 <a href='https://github.com/wb14123/seq2seq-couplet' target='_blank'>Github</a> 给这个项目点个赞",
+                ];
+                var random = Math.floor(Math.random() * hints.length);
+                this.hint = hints[random];
+                console.log(this.hint);
+            },
+            get_output: function () {
+                self = this;
+                self.output = "";
+                self.loading = true;
+                self.loaded = false;
+                self.resultCurse = -1;
+                get("https://ai-backend.binwang.me/v0.2/couplet/" + self.in_str, function (data) {
+                    self.outputs = data.output;
+                    self.scores = data.score;
+                    self.next_output();
+                    self.loading = false;
+                    self.loaded = true;
+                });
+                // tracker.send('event', 'Couplet', 'play');
+
+            },
+            next_output: function () {
+                self = this;
+                self.get_hint();
+                self.score = 0;
+                self.uploading = false;
+                self.uploaded = false;
+                self.resultCurse = (self.resultCurse + 1) % self.outputs.length;
+                self.output = self.outputs[self.resultCurse];
+                self.score = self.scores[self.resultCurse];
+                self.out_html = self.str_to_html(self.output);
+                let score = self.score;
+                console.log(score);
+                self.good_score = (score != 0 && score > -3.5);
+                if (self.good_score === true) {
+                    let end = Date.now() + 3000;
+                    openFire(end);
+                }
+            },
+            str_to_html: function (str) {
+                var html = '';
+                if (!!str) {
+                    for (var i = 0; i < str.length; i++) {
+                        html += '<span>' + str.charAt(i) + '</span>';
+                    }
+                }
+                return html;
+            },
+            scroll_to_couplets: function () {
+                var targetY = document.getElementById('couplets_title').offsetTop - 20;
+                window.scrollTo({ top: targetY, behavior: 'smooth' })
+            },
+            up_couplet: function (val) {
+                this.in_html = this.str_to_html(val);
+            },
+            upload_couplet: function () {
+                self = this;
+                var couplet = {
+                    userId: userId,
+                    up: this.in_str,
+                    down: this.output
+                };
+                self.uploading = true;
+                post(shareBackendHost + "/share/couplet", couplet, function (data) {
+                    self.uploading = false;
+                    self.uploaded = true;
+                    likedIds.add(data.id);
+                    saveLikedIds();
+                    self.get_couplets('new');
+                    self.scroll_to_couplets();
+                })
+                // tracker.send('event', 'Couplet', 'upload');
+            },
+
+            like_couplet: function (couplet_id) {
+                self = this;
+                if (likedIds.has(couplet_id)) {
+                    return
+                }
+                get(shareBackendHost + "/share/like_couplet?user_id=" + userId +
+                    "&couplet_id=" + couplet_id, function (data) {
+                        for (var i = 0; i < self.couplets.length; i++) {
+                            if (self.couplets[i].id == couplet_id) {
+                                self.couplets[i].likedCount = data.likedCount;
+                                self.couplets[i].liked = true;
+                                likedIds.add(couplet_id);
+                                saveLikedIds()
+                            }
+                        }
+                    })
+                // tracker.send('event', 'Couplet', 'like');
+            },
+
+            get_couplets: function (typ) {
+                self = this;
+                self.get_couplet_type = typ;
+                var api = shareBackendHost + "/share/couplets?start=0&count=500";
+                if (typ === 'new') {
+                    api = shareBackendHost + "/share/new_couplets?start=0&count=100";
+                }
+                get(api, function (data) {
+                    self.couplets = [];
+                    for (var i = 0; i < data.couplets.length; i++) {
+                        if ((i - 3) % 10 == 0) {
+                            self.couplets.push({ id: 0 });
+                        }
+                        self.couplets.push(data.couplets[i]);
+                    }
+                    for (var j = 0; j < self.couplets.length; j++) {
+                        self.couplets[j].liked = !!likedIds.has(self.couplets[j].id);
+                    }
+                });
+            },
+
+            handle_scroll: function () {
+                if (window.scrollY > 1000) {
+                    this.show_back = true;
+                } else {
+                    this.show_back = false;
+                }
+                this.show_back_oc
+            },
+
+            back_to_top: function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            },
+
+            resume: function () {
+                if (window.console) {
+                    console.log("%c" + "姓名：常鸿飞\n性别：男\n岗位：前端\n工龄：2.5年\n地点：杭州\n借朋友宝地寻求一份前端工作。联系邮箱chang.0022@163.com", "line-height:1.5");
+                    console.log("%c" + "请在邮件中注明：来自对联系统", "line-height:1.5; color:red;")
+                }
+            }
+        }
+    })
+</script>
+
+</html>
